@@ -5,22 +5,24 @@
 typedef struct __mavlink_mocap_motor_state_t
 {
  uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
+ uint8_t target_system; /*< Target system*/
  uint8_t state; /*< Motor status (1 = on, 0 = off)*/
 } mavlink_mocap_motor_state_t;
 
-#define MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN 9
-#define MAVLINK_MSG_ID_213_LEN 9
+#define MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN 10
+#define MAVLINK_MSG_ID_213_LEN 10
 
-#define MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_CRC 230
-#define MAVLINK_MSG_ID_213_CRC 230
+#define MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_CRC 163
+#define MAVLINK_MSG_ID_213_CRC 163
 
 
 
 #define MAVLINK_MESSAGE_INFO_MOCAP_MOTOR_STATE { \
 	"MOCAP_MOTOR_STATE", \
-	2, \
+	3, \
 	{  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_motor_state_t, time_usec) }, \
-         { "state", NULL, MAVLINK_TYPE_UINT8_T, 0, 8, offsetof(mavlink_mocap_motor_state_t, state) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 8, offsetof(mavlink_mocap_motor_state_t, target_system) }, \
+         { "state", NULL, MAVLINK_TYPE_UINT8_T, 0, 9, offsetof(mavlink_mocap_motor_state_t, state) }, \
          } \
 }
 
@@ -32,21 +34,24 @@ typedef struct __mavlink_mocap_motor_state_t
  * @param msg The MAVLink message to compress the data into
  *
  * @param time_usec Timestamp (micros since boot or Unix epoch)
+ * @param target_system Target system
  * @param state Motor status (1 = on, 0 = off)
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_motor_state_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint64_t time_usec, uint8_t state)
+						       uint64_t time_usec, uint8_t target_system, uint8_t state)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 8, state);
+	_mav_put_uint8_t(buf, 8, target_system);
+	_mav_put_uint8_t(buf, 9, state);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN);
 #else
 	mavlink_mocap_motor_state_t packet;
 	packet.time_usec = time_usec;
+	packet.target_system = target_system;
 	packet.state = state;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN);
@@ -67,22 +72,25 @@ static inline uint16_t mavlink_msg_mocap_motor_state_pack(uint8_t system_id, uin
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param time_usec Timestamp (micros since boot or Unix epoch)
+ * @param target_system Target system
  * @param state Motor status (1 = on, 0 = off)
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_motor_state_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
 							   mavlink_message_t* msg,
-						           uint64_t time_usec,uint8_t state)
+						           uint64_t time_usec,uint8_t target_system,uint8_t state)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 8, state);
+	_mav_put_uint8_t(buf, 8, target_system);
+	_mav_put_uint8_t(buf, 9, state);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN);
 #else
 	mavlink_mocap_motor_state_t packet;
 	packet.time_usec = time_usec;
+	packet.target_system = target_system;
 	packet.state = state;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN);
@@ -106,7 +114,7 @@ static inline uint16_t mavlink_msg_mocap_motor_state_pack_chan(uint8_t system_id
  */
 static inline uint16_t mavlink_msg_mocap_motor_state_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_mocap_motor_state_t* mocap_motor_state)
 {
-	return mavlink_msg_mocap_motor_state_pack(system_id, component_id, msg, mocap_motor_state->time_usec, mocap_motor_state->state);
+	return mavlink_msg_mocap_motor_state_pack(system_id, component_id, msg, mocap_motor_state->time_usec, mocap_motor_state->target_system, mocap_motor_state->state);
 }
 
 /**
@@ -120,7 +128,7 @@ static inline uint16_t mavlink_msg_mocap_motor_state_encode(uint8_t system_id, u
  */
 static inline uint16_t mavlink_msg_mocap_motor_state_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_mocap_motor_state_t* mocap_motor_state)
 {
-	return mavlink_msg_mocap_motor_state_pack_chan(system_id, component_id, chan, msg, mocap_motor_state->time_usec, mocap_motor_state->state);
+	return mavlink_msg_mocap_motor_state_pack_chan(system_id, component_id, chan, msg, mocap_motor_state->time_usec, mocap_motor_state->target_system, mocap_motor_state->state);
 }
 
 /**
@@ -128,16 +136,18 @@ static inline uint16_t mavlink_msg_mocap_motor_state_encode_chan(uint8_t system_
  * @param chan MAVLink channel to send the message
  *
  * @param time_usec Timestamp (micros since boot or Unix epoch)
+ * @param target_system Target system
  * @param state Motor status (1 = on, 0 = off)
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_mocap_motor_state_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t state)
+static inline void mavlink_msg_mocap_motor_state_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t target_system, uint8_t state)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 8, state);
+	_mav_put_uint8_t(buf, 8, target_system);
+	_mav_put_uint8_t(buf, 9, state);
 
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE, buf, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_CRC);
@@ -147,6 +157,7 @@ static inline void mavlink_msg_mocap_motor_state_send(mavlink_channel_t chan, ui
 #else
 	mavlink_mocap_motor_state_t packet;
 	packet.time_usec = time_usec;
+	packet.target_system = target_system;
 	packet.state = state;
 
 #if MAVLINK_CRC_EXTRA
@@ -165,12 +176,13 @@ static inline void mavlink_msg_mocap_motor_state_send(mavlink_channel_t chan, ui
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_mocap_motor_state_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t time_usec, uint8_t state)
+static inline void mavlink_msg_mocap_motor_state_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t time_usec, uint8_t target_system, uint8_t state)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char *buf = (char *)msgbuf;
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 8, state);
+	_mav_put_uint8_t(buf, 8, target_system);
+	_mav_put_uint8_t(buf, 9, state);
 
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE, buf, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN, MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_CRC);
@@ -180,6 +192,7 @@ static inline void mavlink_msg_mocap_motor_state_send_buf(mavlink_message_t *msg
 #else
 	mavlink_mocap_motor_state_t *packet = (mavlink_mocap_motor_state_t *)msgbuf;
 	packet->time_usec = time_usec;
+	packet->target_system = target_system;
 	packet->state = state;
 
 #if MAVLINK_CRC_EXTRA
@@ -207,13 +220,23 @@ static inline uint64_t mavlink_msg_mocap_motor_state_get_time_usec(const mavlink
 }
 
 /**
+ * @brief Get field target_system from mocap_motor_state message
+ *
+ * @return Target system
+ */
+static inline uint8_t mavlink_msg_mocap_motor_state_get_target_system(const mavlink_message_t* msg)
+{
+	return _MAV_RETURN_uint8_t(msg,  8);
+}
+
+/**
  * @brief Get field state from mocap_motor_state message
  *
  * @return Motor status (1 = on, 0 = off)
  */
 static inline uint8_t mavlink_msg_mocap_motor_state_get_state(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  8);
+	return _MAV_RETURN_uint8_t(msg,  9);
 }
 
 /**
@@ -226,6 +249,7 @@ static inline void mavlink_msg_mocap_motor_state_decode(const mavlink_message_t*
 {
 #if MAVLINK_NEED_BYTE_SWAP
 	mocap_motor_state->time_usec = mavlink_msg_mocap_motor_state_get_time_usec(msg);
+	mocap_motor_state->target_system = mavlink_msg_mocap_motor_state_get_target_system(msg);
 	mocap_motor_state->state = mavlink_msg_mocap_motor_state_get_state(msg);
 #else
 	memcpy(mocap_motor_state, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_MOCAP_MOTOR_STATE_LEN);
