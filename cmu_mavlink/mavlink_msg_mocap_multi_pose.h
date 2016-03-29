@@ -5,7 +5,7 @@
 typedef struct __mavlink_mocap_multi_pose_t
 {
  uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
- int16_t pose[20]; /*< Robot pose (x, y, z, heading) in mm or mrad*/
+ int16_t pose[20]; /*< Robot pose (x, y, z, heading) in m/10^3 or rad/10^4*/
  uint8_t npose; /*< Number of poses (max 5)*/
  uint8_t ids[5]; /*< Associated robot ids*/
 } mavlink_mocap_multi_pose_t;
@@ -39,7 +39,7 @@ typedef struct __mavlink_mocap_multi_pose_t
  * @param time_usec Timestamp (micros since boot or Unix epoch)
  * @param npose Number of poses (max 5)
  * @param ids Associated robot ids
- * @param pose Robot pose (x, y, z, heading) in mm or mrad
+ * @param pose Robot pose (x, y, z, heading) in m/10^3 or rad/10^4
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_multi_pose_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
@@ -78,7 +78,7 @@ static inline uint16_t mavlink_msg_mocap_multi_pose_pack(uint8_t system_id, uint
  * @param time_usec Timestamp (micros since boot or Unix epoch)
  * @param npose Number of poses (max 5)
  * @param ids Associated robot ids
- * @param pose Robot pose (x, y, z, heading) in mm or mrad
+ * @param pose Robot pose (x, y, z, heading) in m/10^3 or rad/10^4
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_multi_pose_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
@@ -143,7 +143,7 @@ static inline uint16_t mavlink_msg_mocap_multi_pose_encode_chan(uint8_t system_i
  * @param time_usec Timestamp (micros since boot or Unix epoch)
  * @param npose Number of poses (max 5)
  * @param ids Associated robot ids
- * @param pose Robot pose (x, y, z, heading) in mm or mrad
+ * @param pose Robot pose (x, y, z, heading) in m/10^3 or rad/10^4
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
@@ -248,7 +248,7 @@ static inline uint16_t mavlink_msg_mocap_multi_pose_get_ids(const mavlink_messag
 /**
  * @brief Get field pose from mocap_multi_pose message
  *
- * @return Robot pose (x, y, z, heading) in mm or mrad
+ * @return Robot pose (x, y, z, heading) in m/10^3 or rad/10^4
  */
 static inline uint16_t mavlink_msg_mocap_multi_pose_get_pose(const mavlink_message_t* msg, int16_t *pose)
 {
