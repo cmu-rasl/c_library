@@ -505,18 +505,18 @@ static void mavlink_test_mocap_position_cmd(uint8_t system_id, uint8_t component
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
 	mavlink_mocap_position_cmd_t packet_in = {
-		93372036854775807ULL,{ 17651, 17652, 17653 },{ 17963, 17964, 17965 },{ 18275, 18276, 18277 },{ 18587, 18588, 18589 },18899,235
+		93372036854775807ULL,{ 17651, 17652, 17653 },{ 17963, 17964, 17965 },{ 18275, 18276, 18277 },{ 18587, 18588, 18589 },{ 18899, 18900, 18901 },247
     };
 	mavlink_mocap_position_cmd_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
         	packet1.time_usec = packet_in.time_usec;
-        	packet1.heading = packet_in.heading;
         	packet1.target_system = packet_in.target_system;
         
         	mav_array_memcpy(packet1.pos, packet_in.pos, sizeof(int16_t)*3);
         	mav_array_memcpy(packet1.vel, packet_in.vel, sizeof(int16_t)*3);
         	mav_array_memcpy(packet1.acc, packet_in.acc, sizeof(int16_t)*3);
         	mav_array_memcpy(packet1.jerk, packet_in.jerk, sizeof(int16_t)*3);
+        	mav_array_memcpy(packet1.heading, packet_in.heading, sizeof(int16_t)*3);
         
 
         memset(&packet2, 0, sizeof(packet2));
