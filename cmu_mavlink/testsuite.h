@@ -594,6 +594,51 @@ static void mavlink_test_mocap_position_cmd_gains(uint8_t system_id, uint8_t com
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
+static void mavlink_test_blinkm_control(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_blinkm_control_t packet_in = {
+		93372036854775807ULL,29,96
+    };
+	mavlink_blinkm_control_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.time_usec = packet_in.time_usec;
+        	packet1.target_system = packet_in.target_system;
+        	packet1.control = packet_in.control;
+        
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_blinkm_control_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_blinkm_control_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_blinkm_control_pack(system_id, component_id, &msg , packet1.time_usec , packet1.target_system , packet1.control );
+	mavlink_msg_blinkm_control_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_blinkm_control_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_usec , packet1.target_system , packet1.control );
+	mavlink_msg_blinkm_control_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_blinkm_control_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_blinkm_control_send(MAVLINK_COMM_1 , packet1.time_usec , packet1.target_system , packet1.control );
+	mavlink_msg_blinkm_control_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
 static void mavlink_test_cmu_mavlink(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 	mavlink_test_image_triggered_imu(system_id, component_id, last_msg);
@@ -608,6 +653,7 @@ static void mavlink_test_cmu_mavlink(uint8_t system_id, uint8_t component_id, ma
 	mavlink_test_mocap_multi_pose(system_id, component_id, last_msg);
 	mavlink_test_mocap_position_cmd(system_id, component_id, last_msg);
 	mavlink_test_mocap_position_cmd_gains(system_id, component_id, last_msg);
+	mavlink_test_blinkm_control(system_id, component_id, last_msg);
 }
 
 #ifdef __cplusplus
