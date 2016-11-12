@@ -732,6 +732,50 @@ static void mavlink_test_charger_gpio(uint8_t system_id, uint8_t component_id, m
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
+static void mavlink_test_mocap_pose(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_mocap_pose_t packet_in = {
+		93372036854775807ULL,{ 17651, 17652, 17653, 17654 }
+    };
+	mavlink_mocap_pose_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.time_usec = packet_in.time_usec;
+        
+        	mav_array_memcpy(packet1.pose, packet_in.pose, sizeof(int16_t)*4);
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_mocap_pose_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_mocap_pose_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_mocap_pose_pack(system_id, component_id, &msg , packet1.time_usec , packet1.pose );
+	mavlink_msg_mocap_pose_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_mocap_pose_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_usec , packet1.pose );
+	mavlink_msg_mocap_pose_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_mocap_pose_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_mocap_pose_send(MAVLINK_COMM_1 , packet1.time_usec , packet1.pose );
+	mavlink_msg_mocap_pose_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
 static void mavlink_test_cmu_mavlink(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 	mavlink_test_image_triggered_imu(system_id, component_id, last_msg);
@@ -749,6 +793,7 @@ static void mavlink_test_cmu_mavlink(uint8_t system_id, uint8_t component_id, ma
 	mavlink_test_blinkm_control(system_id, component_id, last_msg);
 	mavlink_test_charger_info(system_id, component_id, last_msg);
 	mavlink_test_charger_gpio(system_id, component_id, last_msg);
+	mavlink_test_mocap_pose(system_id, component_id, last_msg);
 }
 
 #ifdef __cplusplus
