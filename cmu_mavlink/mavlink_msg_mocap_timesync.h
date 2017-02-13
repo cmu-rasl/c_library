@@ -1,31 +1,45 @@
+#pragma once
 // MESSAGE MOCAP_TIMESYNC PACKING
 
 #define MAVLINK_MSG_ID_MOCAP_TIMESYNC 215
 
-typedef struct __mavlink_mocap_timesync_t
-{
+MAVPACKED(
+typedef struct __mavlink_mocap_timesync_t {
  int64_t tc1; /*< Time sync timestamp 1*/
  int64_t ts1; /*< Time sync timestamp 2*/
  uint8_t target_system; /*< Target system*/
-} mavlink_mocap_timesync_t;
+}) mavlink_mocap_timesync_t;
 
 #define MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN 17
+#define MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN 17
 #define MAVLINK_MSG_ID_215_LEN 17
+#define MAVLINK_MSG_ID_215_MIN_LEN 17
 
 #define MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC 193
 #define MAVLINK_MSG_ID_215_CRC 193
 
 
 
+#if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_MOCAP_TIMESYNC { \
-	"MOCAP_TIMESYNC", \
-	3, \
-	{  { "tc1", NULL, MAVLINK_TYPE_INT64_T, 0, 0, offsetof(mavlink_mocap_timesync_t, tc1) }, \
+    215, \
+    "MOCAP_TIMESYNC", \
+    3, \
+    {  { "tc1", NULL, MAVLINK_TYPE_INT64_T, 0, 0, offsetof(mavlink_mocap_timesync_t, tc1) }, \
          { "ts1", NULL, MAVLINK_TYPE_INT64_T, 0, 8, offsetof(mavlink_mocap_timesync_t, ts1) }, \
          { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 16, offsetof(mavlink_mocap_timesync_t, target_system) }, \
          } \
 }
-
+#else
+#define MAVLINK_MESSAGE_INFO_MOCAP_TIMESYNC { \
+    "MOCAP_TIMESYNC", \
+    3, \
+    {  { "tc1", NULL, MAVLINK_TYPE_INT64_T, 0, 0, offsetof(mavlink_mocap_timesync_t, tc1) }, \
+         { "ts1", NULL, MAVLINK_TYPE_INT64_T, 0, 8, offsetof(mavlink_mocap_timesync_t, ts1) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 16, offsetof(mavlink_mocap_timesync_t, target_system) }, \
+         } \
+}
+#endif
 
 /**
  * @brief Pack a mocap_timesync message
@@ -39,30 +53,26 @@ typedef struct __mavlink_mocap_timesync_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_timesync_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint8_t target_system, int64_t tc1, int64_t ts1)
+                               uint8_t target_system, int64_t tc1, int64_t ts1)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
-	_mav_put_int64_t(buf, 0, tc1);
-	_mav_put_int64_t(buf, 8, ts1);
-	_mav_put_uint8_t(buf, 16, target_system);
+    char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
+    _mav_put_int64_t(buf, 0, tc1);
+    _mav_put_int64_t(buf, 8, ts1);
+    _mav_put_uint8_t(buf, 16, target_system);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
 #else
-	mavlink_mocap_timesync_t packet;
-	packet.tc1 = tc1;
-	packet.ts1 = ts1;
-	packet.target_system = target_system;
+    mavlink_mocap_timesync_t packet;
+    packet.tc1 = tc1;
+    packet.ts1 = ts1;
+    packet.target_system = target_system;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_TIMESYNC;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_TIMESYNC;
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 }
 
 /**
@@ -77,31 +87,27 @@ static inline uint16_t mavlink_msg_mocap_timesync_pack(uint8_t system_id, uint8_
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_timesync_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
-							   mavlink_message_t* msg,
-						           uint8_t target_system,int64_t tc1,int64_t ts1)
+                               mavlink_message_t* msg,
+                                   uint8_t target_system,int64_t tc1,int64_t ts1)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
-	_mav_put_int64_t(buf, 0, tc1);
-	_mav_put_int64_t(buf, 8, ts1);
-	_mav_put_uint8_t(buf, 16, target_system);
+    char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
+    _mav_put_int64_t(buf, 0, tc1);
+    _mav_put_int64_t(buf, 8, ts1);
+    _mav_put_uint8_t(buf, 16, target_system);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
 #else
-	mavlink_mocap_timesync_t packet;
-	packet.tc1 = tc1;
-	packet.ts1 = ts1;
-	packet.target_system = target_system;
+    mavlink_mocap_timesync_t packet;
+    packet.tc1 = tc1;
+    packet.ts1 = ts1;
+    packet.target_system = target_system;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_TIMESYNC;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_TIMESYNC;
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 }
 
 /**
@@ -114,7 +120,7 @@ static inline uint16_t mavlink_msg_mocap_timesync_pack_chan(uint8_t system_id, u
  */
 static inline uint16_t mavlink_msg_mocap_timesync_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_mocap_timesync_t* mocap_timesync)
 {
-	return mavlink_msg_mocap_timesync_pack(system_id, component_id, msg, mocap_timesync->target_system, mocap_timesync->tc1, mocap_timesync->ts1);
+    return mavlink_msg_mocap_timesync_pack(system_id, component_id, msg, mocap_timesync->target_system, mocap_timesync->tc1, mocap_timesync->ts1);
 }
 
 /**
@@ -128,7 +134,7 @@ static inline uint16_t mavlink_msg_mocap_timesync_encode(uint8_t system_id, uint
  */
 static inline uint16_t mavlink_msg_mocap_timesync_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_mocap_timesync_t* mocap_timesync)
 {
-	return mavlink_msg_mocap_timesync_pack_chan(system_id, component_id, chan, msg, mocap_timesync->target_system, mocap_timesync->tc1, mocap_timesync->ts1);
+    return mavlink_msg_mocap_timesync_pack_chan(system_id, component_id, chan, msg, mocap_timesync->target_system, mocap_timesync->tc1, mocap_timesync->ts1);
 }
 
 /**
@@ -144,27 +150,33 @@ static inline uint16_t mavlink_msg_mocap_timesync_encode_chan(uint8_t system_id,
 static inline void mavlink_msg_mocap_timesync_send(mavlink_channel_t chan, uint8_t target_system, int64_t tc1, int64_t ts1)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
-	_mav_put_int64_t(buf, 0, tc1);
-	_mav_put_int64_t(buf, 8, ts1);
-	_mav_put_uint8_t(buf, 16, target_system);
+    char buf[MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN];
+    _mav_put_int64_t(buf, 0, tc1);
+    _mav_put_int64_t(buf, 8, ts1);
+    _mav_put_uint8_t(buf, 16, target_system);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
-#endif
-#else
-	mavlink_mocap_timesync_t packet;
-	packet.tc1 = tc1;
-	packet.ts1 = ts1;
-	packet.target_system = target_system;
+    mavlink_mocap_timesync_t packet;
+    packet.tc1 = tc1;
+    packet.ts1 = ts1;
+    packet.target_system = target_system;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 #endif
+}
+
+/**
+ * @brief Send a mocap_timesync message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_mocap_timesync_send_struct(mavlink_channel_t chan, const mavlink_mocap_timesync_t* mocap_timesync)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_mocap_timesync_send(chan, mocap_timesync->target_system, mocap_timesync->tc1, mocap_timesync->ts1);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)mocap_timesync, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 #endif
 }
 
@@ -179,27 +191,19 @@ static inline void mavlink_msg_mocap_timesync_send(mavlink_channel_t chan, uint8
 static inline void mavlink_msg_mocap_timesync_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t target_system, int64_t tc1, int64_t ts1)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char *buf = (char *)msgbuf;
-	_mav_put_int64_t(buf, 0, tc1);
-	_mav_put_int64_t(buf, 8, ts1);
-	_mav_put_uint8_t(buf, 16, target_system);
+    char *buf = (char *)msgbuf;
+    _mav_put_int64_t(buf, 0, tc1);
+    _mav_put_int64_t(buf, 8, ts1);
+    _mav_put_uint8_t(buf, 16, target_system);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, buf, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
-#endif
-#else
-	mavlink_mocap_timesync_t *packet = (mavlink_mocap_timesync_t *)msgbuf;
-	packet->tc1 = tc1;
-	packet->ts1 = ts1;
-	packet->target_system = target_system;
+    mavlink_mocap_timesync_t *packet = (mavlink_mocap_timesync_t *)msgbuf;
+    packet->tc1 = tc1;
+    packet->ts1 = ts1;
+    packet->target_system = target_system;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_TIMESYNC, (const char *)packet, MAVLINK_MSG_ID_MOCAP_TIMESYNC_MIN_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN, MAVLINK_MSG_ID_MOCAP_TIMESYNC_CRC);
 #endif
 }
 #endif
@@ -216,7 +220,7 @@ static inline void mavlink_msg_mocap_timesync_send_buf(mavlink_message_t *msgbuf
  */
 static inline uint8_t mavlink_msg_mocap_timesync_get_target_system(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  16);
+    return _MAV_RETURN_uint8_t(msg,  16);
 }
 
 /**
@@ -226,7 +230,7 @@ static inline uint8_t mavlink_msg_mocap_timesync_get_target_system(const mavlink
  */
 static inline int64_t mavlink_msg_mocap_timesync_get_tc1(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_int64_t(msg,  0);
+    return _MAV_RETURN_int64_t(msg,  0);
 }
 
 /**
@@ -236,7 +240,7 @@ static inline int64_t mavlink_msg_mocap_timesync_get_tc1(const mavlink_message_t
  */
 static inline int64_t mavlink_msg_mocap_timesync_get_ts1(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_int64_t(msg,  8);
+    return _MAV_RETURN_int64_t(msg,  8);
 }
 
 /**
@@ -247,11 +251,13 @@ static inline int64_t mavlink_msg_mocap_timesync_get_ts1(const mavlink_message_t
  */
 static inline void mavlink_msg_mocap_timesync_decode(const mavlink_message_t* msg, mavlink_mocap_timesync_t* mocap_timesync)
 {
-#if MAVLINK_NEED_BYTE_SWAP
-	mocap_timesync->tc1 = mavlink_msg_mocap_timesync_get_tc1(msg);
-	mocap_timesync->ts1 = mavlink_msg_mocap_timesync_get_ts1(msg);
-	mocap_timesync->target_system = mavlink_msg_mocap_timesync_get_target_system(msg);
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mocap_timesync->tc1 = mavlink_msg_mocap_timesync_get_tc1(msg);
+    mocap_timesync->ts1 = mavlink_msg_mocap_timesync_get_ts1(msg);
+    mocap_timesync->target_system = mavlink_msg_mocap_timesync_get_target_system(msg);
 #else
-	memcpy(mocap_timesync, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN? msg->len : MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN;
+        memset(mocap_timesync, 0, MAVLINK_MSG_ID_MOCAP_TIMESYNC_LEN);
+    memcpy(mocap_timesync, _MAV_PAYLOAD(msg), len);
 #endif
 }

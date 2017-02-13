@@ -1,33 +1,48 @@
+#pragma once
 // MESSAGE MOCAP_RPM_CMD PACKING
 
 #define MAVLINK_MSG_ID_MOCAP_RPM_CMD 214
 
-typedef struct __mavlink_mocap_rpm_cmd_t
-{
+MAVPACKED(
+typedef struct __mavlink_mocap_rpm_cmd_t {
  uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
  uint16_t input[8]; /*< RPM cmd inputs*/
  uint8_t target_system; /*< Target system*/
  uint8_t ninputs; /*< Number of valid inputs*/
-} mavlink_mocap_rpm_cmd_t;
+}) mavlink_mocap_rpm_cmd_t;
 
 #define MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN 26
+#define MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN 26
 #define MAVLINK_MSG_ID_214_LEN 26
+#define MAVLINK_MSG_ID_214_MIN_LEN 26
 
 #define MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC 157
 #define MAVLINK_MSG_ID_214_CRC 157
 
 #define MAVLINK_MSG_MOCAP_RPM_CMD_FIELD_INPUT_LEN 8
 
+#if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_MOCAP_RPM_CMD { \
-	"MOCAP_RPM_CMD", \
-	4, \
-	{  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_rpm_cmd_t, time_usec) }, \
+    214, \
+    "MOCAP_RPM_CMD", \
+    4, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_rpm_cmd_t, time_usec) }, \
          { "input", NULL, MAVLINK_TYPE_UINT16_T, 8, 8, offsetof(mavlink_mocap_rpm_cmd_t, input) }, \
          { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 24, offsetof(mavlink_mocap_rpm_cmd_t, target_system) }, \
          { "ninputs", NULL, MAVLINK_TYPE_UINT8_T, 0, 25, offsetof(mavlink_mocap_rpm_cmd_t, ninputs) }, \
          } \
 }
-
+#else
+#define MAVLINK_MESSAGE_INFO_MOCAP_RPM_CMD { \
+    "MOCAP_RPM_CMD", \
+    4, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_rpm_cmd_t, time_usec) }, \
+         { "input", NULL, MAVLINK_TYPE_UINT16_T, 8, 8, offsetof(mavlink_mocap_rpm_cmd_t, input) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 24, offsetof(mavlink_mocap_rpm_cmd_t, target_system) }, \
+         { "ninputs", NULL, MAVLINK_TYPE_UINT8_T, 0, 25, offsetof(mavlink_mocap_rpm_cmd_t, ninputs) }, \
+         } \
+}
+#endif
 
 /**
  * @brief Pack a mocap_rpm_cmd message
@@ -42,30 +57,26 @@ typedef struct __mavlink_mocap_rpm_cmd_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_rpm_cmd_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint64_t time_usec, uint8_t target_system, uint8_t ninputs, const uint16_t *input)
+                               uint64_t time_usec, uint8_t target_system, uint8_t ninputs, const uint16_t *input)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 24, target_system);
-	_mav_put_uint8_t(buf, 25, ninputs);
-	_mav_put_uint16_t_array(buf, 8, input, 8);
+    char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 24, target_system);
+    _mav_put_uint8_t(buf, 25, ninputs);
+    _mav_put_uint16_t_array(buf, 8, input, 8);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
 #else
-	mavlink_mocap_rpm_cmd_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	packet.ninputs = ninputs;
-	mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
+    mavlink_mocap_rpm_cmd_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    packet.ninputs = ninputs;
+    mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_RPM_CMD;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_RPM_CMD;
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 }
 
 /**
@@ -81,31 +92,27 @@ static inline uint16_t mavlink_msg_mocap_rpm_cmd_pack(uint8_t system_id, uint8_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_rpm_cmd_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
-							   mavlink_message_t* msg,
-						           uint64_t time_usec,uint8_t target_system,uint8_t ninputs,const uint16_t *input)
+                               mavlink_message_t* msg,
+                                   uint64_t time_usec,uint8_t target_system,uint8_t ninputs,const uint16_t *input)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 24, target_system);
-	_mav_put_uint8_t(buf, 25, ninputs);
-	_mav_put_uint16_t_array(buf, 8, input, 8);
+    char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 24, target_system);
+    _mav_put_uint8_t(buf, 25, ninputs);
+    _mav_put_uint16_t_array(buf, 8, input, 8);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
 #else
-	mavlink_mocap_rpm_cmd_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	packet.ninputs = ninputs;
-	mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
+    mavlink_mocap_rpm_cmd_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    packet.ninputs = ninputs;
+    mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_RPM_CMD;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_RPM_CMD;
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 }
 
 /**
@@ -118,7 +125,7 @@ static inline uint16_t mavlink_msg_mocap_rpm_cmd_pack_chan(uint8_t system_id, ui
  */
 static inline uint16_t mavlink_msg_mocap_rpm_cmd_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_mocap_rpm_cmd_t* mocap_rpm_cmd)
 {
-	return mavlink_msg_mocap_rpm_cmd_pack(system_id, component_id, msg, mocap_rpm_cmd->time_usec, mocap_rpm_cmd->target_system, mocap_rpm_cmd->ninputs, mocap_rpm_cmd->input);
+    return mavlink_msg_mocap_rpm_cmd_pack(system_id, component_id, msg, mocap_rpm_cmd->time_usec, mocap_rpm_cmd->target_system, mocap_rpm_cmd->ninputs, mocap_rpm_cmd->input);
 }
 
 /**
@@ -132,7 +139,7 @@ static inline uint16_t mavlink_msg_mocap_rpm_cmd_encode(uint8_t system_id, uint8
  */
 static inline uint16_t mavlink_msg_mocap_rpm_cmd_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_mocap_rpm_cmd_t* mocap_rpm_cmd)
 {
-	return mavlink_msg_mocap_rpm_cmd_pack_chan(system_id, component_id, chan, msg, mocap_rpm_cmd->time_usec, mocap_rpm_cmd->target_system, mocap_rpm_cmd->ninputs, mocap_rpm_cmd->input);
+    return mavlink_msg_mocap_rpm_cmd_pack_chan(system_id, component_id, chan, msg, mocap_rpm_cmd->time_usec, mocap_rpm_cmd->target_system, mocap_rpm_cmd->ninputs, mocap_rpm_cmd->input);
 }
 
 /**
@@ -149,27 +156,33 @@ static inline uint16_t mavlink_msg_mocap_rpm_cmd_encode_chan(uint8_t system_id, 
 static inline void mavlink_msg_mocap_rpm_cmd_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t target_system, uint8_t ninputs, const uint16_t *input)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 24, target_system);
-	_mav_put_uint8_t(buf, 25, ninputs);
-	_mav_put_uint16_t_array(buf, 8, input, 8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
+    char buf[MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 24, target_system);
+    _mav_put_uint8_t(buf, 25, ninputs);
+    _mav_put_uint16_t_array(buf, 8, input, 8);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
+    mavlink_mocap_rpm_cmd_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    packet.ninputs = ninputs;
+    mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 #endif
+}
+
+/**
+ * @brief Send a mocap_rpm_cmd message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_mocap_rpm_cmd_send_struct(mavlink_channel_t chan, const mavlink_mocap_rpm_cmd_t* mocap_rpm_cmd)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_mocap_rpm_cmd_send(chan, mocap_rpm_cmd->time_usec, mocap_rpm_cmd->target_system, mocap_rpm_cmd->ninputs, mocap_rpm_cmd->input);
 #else
-	mavlink_mocap_rpm_cmd_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	packet.ninputs = ninputs;
-	mav_array_memcpy(packet.input, input, sizeof(uint16_t)*8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)mocap_rpm_cmd, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 #endif
 }
 
@@ -184,27 +197,19 @@ static inline void mavlink_msg_mocap_rpm_cmd_send(mavlink_channel_t chan, uint64
 static inline void mavlink_msg_mocap_rpm_cmd_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t time_usec, uint8_t target_system, uint8_t ninputs, const uint16_t *input)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char *buf = (char *)msgbuf;
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 24, target_system);
-	_mav_put_uint8_t(buf, 25, ninputs);
-	_mav_put_uint16_t_array(buf, 8, input, 8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
+    char *buf = (char *)msgbuf;
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 24, target_system);
+    _mav_put_uint8_t(buf, 25, ninputs);
+    _mav_put_uint16_t_array(buf, 8, input, 8);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, buf, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
-#endif
-#else
-	mavlink_mocap_rpm_cmd_t *packet = (mavlink_mocap_rpm_cmd_t *)msgbuf;
-	packet->time_usec = time_usec;
-	packet->target_system = target_system;
-	packet->ninputs = ninputs;
-	mav_array_memcpy(packet->input, input, sizeof(uint16_t)*8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
-#endif
+    mavlink_mocap_rpm_cmd_t *packet = (mavlink_mocap_rpm_cmd_t *)msgbuf;
+    packet->time_usec = time_usec;
+    packet->target_system = target_system;
+    packet->ninputs = ninputs;
+    mav_array_memcpy(packet->input, input, sizeof(uint16_t)*8);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_RPM_CMD, (const char *)packet, MAVLINK_MSG_ID_MOCAP_RPM_CMD_MIN_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN, MAVLINK_MSG_ID_MOCAP_RPM_CMD_CRC);
 #endif
 }
 #endif
@@ -221,7 +226,7 @@ static inline void mavlink_msg_mocap_rpm_cmd_send_buf(mavlink_message_t *msgbuf,
  */
 static inline uint64_t mavlink_msg_mocap_rpm_cmd_get_time_usec(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  0);
+    return _MAV_RETURN_uint64_t(msg,  0);
 }
 
 /**
@@ -231,7 +236,7 @@ static inline uint64_t mavlink_msg_mocap_rpm_cmd_get_time_usec(const mavlink_mes
  */
 static inline uint8_t mavlink_msg_mocap_rpm_cmd_get_target_system(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  24);
+    return _MAV_RETURN_uint8_t(msg,  24);
 }
 
 /**
@@ -241,7 +246,7 @@ static inline uint8_t mavlink_msg_mocap_rpm_cmd_get_target_system(const mavlink_
  */
 static inline uint8_t mavlink_msg_mocap_rpm_cmd_get_ninputs(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  25);
+    return _MAV_RETURN_uint8_t(msg,  25);
 }
 
 /**
@@ -251,7 +256,7 @@ static inline uint8_t mavlink_msg_mocap_rpm_cmd_get_ninputs(const mavlink_messag
  */
 static inline uint16_t mavlink_msg_mocap_rpm_cmd_get_input(const mavlink_message_t* msg, uint16_t *input)
 {
-	return _MAV_RETURN_uint16_t_array(msg, input, 8,  8);
+    return _MAV_RETURN_uint16_t_array(msg, input, 8,  8);
 }
 
 /**
@@ -262,12 +267,14 @@ static inline uint16_t mavlink_msg_mocap_rpm_cmd_get_input(const mavlink_message
  */
 static inline void mavlink_msg_mocap_rpm_cmd_decode(const mavlink_message_t* msg, mavlink_mocap_rpm_cmd_t* mocap_rpm_cmd)
 {
-#if MAVLINK_NEED_BYTE_SWAP
-	mocap_rpm_cmd->time_usec = mavlink_msg_mocap_rpm_cmd_get_time_usec(msg);
-	mavlink_msg_mocap_rpm_cmd_get_input(msg, mocap_rpm_cmd->input);
-	mocap_rpm_cmd->target_system = mavlink_msg_mocap_rpm_cmd_get_target_system(msg);
-	mocap_rpm_cmd->ninputs = mavlink_msg_mocap_rpm_cmd_get_ninputs(msg);
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mocap_rpm_cmd->time_usec = mavlink_msg_mocap_rpm_cmd_get_time_usec(msg);
+    mavlink_msg_mocap_rpm_cmd_get_input(msg, mocap_rpm_cmd->input);
+    mocap_rpm_cmd->target_system = mavlink_msg_mocap_rpm_cmd_get_target_system(msg);
+    mocap_rpm_cmd->ninputs = mavlink_msg_mocap_rpm_cmd_get_ninputs(msg);
 #else
-	memcpy(mocap_rpm_cmd, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN? msg->len : MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN;
+        memset(mocap_rpm_cmd, 0, MAVLINK_MSG_ID_MOCAP_RPM_CMD_LEN);
+    memcpy(mocap_rpm_cmd, _MAV_PAYLOAD(msg), len);
 #endif
 }

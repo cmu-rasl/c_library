@@ -1,17 +1,20 @@
+#pragma once
 // MESSAGE MOCAP_POSITION_CMD_GAINS PACKING
 
 #define MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS 218
 
-typedef struct __mavlink_mocap_position_cmd_gains_t
-{
+MAVPACKED(
+typedef struct __mavlink_mocap_position_cmd_gains_t {
  uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
  float kp[3]; /*< Proportional gains*/
  float kd[3]; /*< Derivative gains*/
  uint8_t target_system; /*< Target system*/
-} mavlink_mocap_position_cmd_gains_t;
+}) mavlink_mocap_position_cmd_gains_t;
 
 #define MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN 33
+#define MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN 33
 #define MAVLINK_MSG_ID_218_LEN 33
+#define MAVLINK_MSG_ID_218_MIN_LEN 33
 
 #define MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC 73
 #define MAVLINK_MSG_ID_218_CRC 73
@@ -19,16 +22,28 @@ typedef struct __mavlink_mocap_position_cmd_gains_t
 #define MAVLINK_MSG_MOCAP_POSITION_CMD_GAINS_FIELD_KP_LEN 3
 #define MAVLINK_MSG_MOCAP_POSITION_CMD_GAINS_FIELD_KD_LEN 3
 
+#if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_MOCAP_POSITION_CMD_GAINS { \
-	"MOCAP_POSITION_CMD_GAINS", \
-	4, \
-	{  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_position_cmd_gains_t, time_usec) }, \
+    218, \
+    "MOCAP_POSITION_CMD_GAINS", \
+    4, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_position_cmd_gains_t, time_usec) }, \
          { "kp", NULL, MAVLINK_TYPE_FLOAT, 3, 8, offsetof(mavlink_mocap_position_cmd_gains_t, kp) }, \
          { "kd", NULL, MAVLINK_TYPE_FLOAT, 3, 20, offsetof(mavlink_mocap_position_cmd_gains_t, kd) }, \
          { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 32, offsetof(mavlink_mocap_position_cmd_gains_t, target_system) }, \
          } \
 }
-
+#else
+#define MAVLINK_MESSAGE_INFO_MOCAP_POSITION_CMD_GAINS { \
+    "MOCAP_POSITION_CMD_GAINS", \
+    4, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_mocap_position_cmd_gains_t, time_usec) }, \
+         { "kp", NULL, MAVLINK_TYPE_FLOAT, 3, 8, offsetof(mavlink_mocap_position_cmd_gains_t, kp) }, \
+         { "kd", NULL, MAVLINK_TYPE_FLOAT, 3, 20, offsetof(mavlink_mocap_position_cmd_gains_t, kd) }, \
+         { "target_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 32, offsetof(mavlink_mocap_position_cmd_gains_t, target_system) }, \
+         } \
+}
+#endif
 
 /**
  * @brief Pack a mocap_position_cmd_gains message
@@ -43,30 +58,26 @@ typedef struct __mavlink_mocap_position_cmd_gains_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint64_t time_usec, uint8_t target_system, const float *kp, const float *kd)
+                               uint64_t time_usec, uint8_t target_system, const float *kp, const float *kd)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 32, target_system);
-	_mav_put_float_array(buf, 8, kp, 3);
-	_mav_put_float_array(buf, 20, kd, 3);
+    char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 32, target_system);
+    _mav_put_float_array(buf, 8, kp, 3);
+    _mav_put_float_array(buf, 20, kd, 3);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
 #else
-	mavlink_mocap_position_cmd_gains_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
-	mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
+    mavlink_mocap_position_cmd_gains_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
+    mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS;
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 }
 
 /**
@@ -82,31 +93,27 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_pack(uint8_t system_
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
-							   mavlink_message_t* msg,
-						           uint64_t time_usec,uint8_t target_system,const float *kp,const float *kd)
+                               mavlink_message_t* msg,
+                                   uint64_t time_usec,uint8_t target_system,const float *kp,const float *kd)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 32, target_system);
-	_mav_put_float_array(buf, 8, kp, 3);
-	_mav_put_float_array(buf, 20, kd, 3);
+    char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 32, target_system);
+    _mav_put_float_array(buf, 8, kp, 3);
+    _mav_put_float_array(buf, 20, kd, 3);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
 #else
-	mavlink_mocap_position_cmd_gains_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
-	mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
+    mavlink_mocap_position_cmd_gains_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
+    mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS;
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 }
 
 /**
@@ -119,7 +126,7 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_pack_chan(uint8_t sy
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_mocap_position_cmd_gains_t* mocap_position_cmd_gains)
 {
-	return mavlink_msg_mocap_position_cmd_gains_pack(system_id, component_id, msg, mocap_position_cmd_gains->time_usec, mocap_position_cmd_gains->target_system, mocap_position_cmd_gains->kp, mocap_position_cmd_gains->kd);
+    return mavlink_msg_mocap_position_cmd_gains_pack(system_id, component_id, msg, mocap_position_cmd_gains->time_usec, mocap_position_cmd_gains->target_system, mocap_position_cmd_gains->kp, mocap_position_cmd_gains->kd);
 }
 
 /**
@@ -133,7 +140,7 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_encode(uint8_t syste
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_mocap_position_cmd_gains_t* mocap_position_cmd_gains)
 {
-	return mavlink_msg_mocap_position_cmd_gains_pack_chan(system_id, component_id, chan, msg, mocap_position_cmd_gains->time_usec, mocap_position_cmd_gains->target_system, mocap_position_cmd_gains->kp, mocap_position_cmd_gains->kd);
+    return mavlink_msg_mocap_position_cmd_gains_pack_chan(system_id, component_id, chan, msg, mocap_position_cmd_gains->time_usec, mocap_position_cmd_gains->target_system, mocap_position_cmd_gains->kp, mocap_position_cmd_gains->kd);
 }
 
 /**
@@ -150,27 +157,33 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_encode_chan(uint8_t 
 static inline void mavlink_msg_mocap_position_cmd_gains_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t target_system, const float *kp, const float *kd)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 32, target_system);
-	_mav_put_float_array(buf, 8, kp, 3);
-	_mav_put_float_array(buf, 20, kd, 3);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
+    char buf[MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 32, target_system);
+    _mav_put_float_array(buf, 8, kp, 3);
+    _mav_put_float_array(buf, 20, kd, 3);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
+    mavlink_mocap_position_cmd_gains_t packet;
+    packet.time_usec = time_usec;
+    packet.target_system = target_system;
+    mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
+    mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 #endif
+}
+
+/**
+ * @brief Send a mocap_position_cmd_gains message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_mocap_position_cmd_gains_send_struct(mavlink_channel_t chan, const mavlink_mocap_position_cmd_gains_t* mocap_position_cmd_gains)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_mocap_position_cmd_gains_send(chan, mocap_position_cmd_gains->time_usec, mocap_position_cmd_gains->target_system, mocap_position_cmd_gains->kp, mocap_position_cmd_gains->kd);
 #else
-	mavlink_mocap_position_cmd_gains_t packet;
-	packet.time_usec = time_usec;
-	packet.target_system = target_system;
-	mav_array_memcpy(packet.kp, kp, sizeof(float)*3);
-	mav_array_memcpy(packet.kd, kd, sizeof(float)*3);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)&packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)mocap_position_cmd_gains, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 #endif
 }
 
@@ -185,27 +198,19 @@ static inline void mavlink_msg_mocap_position_cmd_gains_send(mavlink_channel_t c
 static inline void mavlink_msg_mocap_position_cmd_gains_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t time_usec, uint8_t target_system, const float *kp, const float *kd)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char *buf = (char *)msgbuf;
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 32, target_system);
-	_mav_put_float_array(buf, 8, kp, 3);
-	_mav_put_float_array(buf, 20, kd, 3);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
+    char *buf = (char *)msgbuf;
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint8_t(buf, 32, target_system);
+    _mav_put_float_array(buf, 8, kp, 3);
+    _mav_put_float_array(buf, 20, kd, 3);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, buf, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
-#endif
-#else
-	mavlink_mocap_position_cmd_gains_t *packet = (mavlink_mocap_position_cmd_gains_t *)msgbuf;
-	packet->time_usec = time_usec;
-	packet->target_system = target_system;
-	mav_array_memcpy(packet->kp, kp, sizeof(float)*3);
-	mav_array_memcpy(packet->kd, kd, sizeof(float)*3);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
-#endif
+    mavlink_mocap_position_cmd_gains_t *packet = (mavlink_mocap_position_cmd_gains_t *)msgbuf;
+    packet->time_usec = time_usec;
+    packet->target_system = target_system;
+    mav_array_memcpy(packet->kp, kp, sizeof(float)*3);
+    mav_array_memcpy(packet->kd, kd, sizeof(float)*3);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS, (const char *)packet, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_MIN_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_CRC);
 #endif
 }
 #endif
@@ -222,7 +227,7 @@ static inline void mavlink_msg_mocap_position_cmd_gains_send_buf(mavlink_message
  */
 static inline uint64_t mavlink_msg_mocap_position_cmd_gains_get_time_usec(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  0);
+    return _MAV_RETURN_uint64_t(msg,  0);
 }
 
 /**
@@ -232,7 +237,7 @@ static inline uint64_t mavlink_msg_mocap_position_cmd_gains_get_time_usec(const 
  */
 static inline uint8_t mavlink_msg_mocap_position_cmd_gains_get_target_system(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  32);
+    return _MAV_RETURN_uint8_t(msg,  32);
 }
 
 /**
@@ -242,7 +247,7 @@ static inline uint8_t mavlink_msg_mocap_position_cmd_gains_get_target_system(con
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_get_kp(const mavlink_message_t* msg, float *kp)
 {
-	return _MAV_RETURN_float_array(msg, kp, 3,  8);
+    return _MAV_RETURN_float_array(msg, kp, 3,  8);
 }
 
 /**
@@ -252,7 +257,7 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_get_kp(const mavlink
  */
 static inline uint16_t mavlink_msg_mocap_position_cmd_gains_get_kd(const mavlink_message_t* msg, float *kd)
 {
-	return _MAV_RETURN_float_array(msg, kd, 3,  20);
+    return _MAV_RETURN_float_array(msg, kd, 3,  20);
 }
 
 /**
@@ -263,12 +268,14 @@ static inline uint16_t mavlink_msg_mocap_position_cmd_gains_get_kd(const mavlink
  */
 static inline void mavlink_msg_mocap_position_cmd_gains_decode(const mavlink_message_t* msg, mavlink_mocap_position_cmd_gains_t* mocap_position_cmd_gains)
 {
-#if MAVLINK_NEED_BYTE_SWAP
-	mocap_position_cmd_gains->time_usec = mavlink_msg_mocap_position_cmd_gains_get_time_usec(msg);
-	mavlink_msg_mocap_position_cmd_gains_get_kp(msg, mocap_position_cmd_gains->kp);
-	mavlink_msg_mocap_position_cmd_gains_get_kd(msg, mocap_position_cmd_gains->kd);
-	mocap_position_cmd_gains->target_system = mavlink_msg_mocap_position_cmd_gains_get_target_system(msg);
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mocap_position_cmd_gains->time_usec = mavlink_msg_mocap_position_cmd_gains_get_time_usec(msg);
+    mavlink_msg_mocap_position_cmd_gains_get_kp(msg, mocap_position_cmd_gains->kp);
+    mavlink_msg_mocap_position_cmd_gains_get_kd(msg, mocap_position_cmd_gains->kd);
+    mocap_position_cmd_gains->target_system = mavlink_msg_mocap_position_cmd_gains_get_target_system(msg);
 #else
-	memcpy(mocap_position_cmd_gains, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN? msg->len : MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN;
+        memset(mocap_position_cmd_gains, 0, MAVLINK_MSG_ID_MOCAP_POSITION_CMD_GAINS_LEN);
+    memcpy(mocap_position_cmd_gains, _MAV_PAYLOAD(msg), len);
 #endif
 }

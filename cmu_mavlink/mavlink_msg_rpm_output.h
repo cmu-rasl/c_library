@@ -1,31 +1,45 @@
+#pragma once
 // MESSAGE RPM_OUTPUT PACKING
 
 #define MAVLINK_MSG_ID_RPM_OUTPUT 210
 
-typedef struct __mavlink_rpm_output_t
-{
+MAVPACKED(
+typedef struct __mavlink_rpm_output_t {
  uint64_t time_usec; /*< Timestamp (micros since boot or Unix epoch)*/
  uint32_t noutputs; /*< Number of valid outputs*/
  float output[16]; /*< RPM outputs*/
-} mavlink_rpm_output_t;
+}) mavlink_rpm_output_t;
 
 #define MAVLINK_MSG_ID_RPM_OUTPUT_LEN 76
+#define MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN 76
 #define MAVLINK_MSG_ID_210_LEN 76
+#define MAVLINK_MSG_ID_210_MIN_LEN 76
 
 #define MAVLINK_MSG_ID_RPM_OUTPUT_CRC 101
 #define MAVLINK_MSG_ID_210_CRC 101
 
 #define MAVLINK_MSG_RPM_OUTPUT_FIELD_OUTPUT_LEN 16
 
+#if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_RPM_OUTPUT { \
-	"RPM_OUTPUT", \
-	3, \
-	{  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_rpm_output_t, time_usec) }, \
+    210, \
+    "RPM_OUTPUT", \
+    3, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_rpm_output_t, time_usec) }, \
          { "noutputs", NULL, MAVLINK_TYPE_UINT32_T, 0, 8, offsetof(mavlink_rpm_output_t, noutputs) }, \
          { "output", NULL, MAVLINK_TYPE_FLOAT, 16, 12, offsetof(mavlink_rpm_output_t, output) }, \
          } \
 }
-
+#else
+#define MAVLINK_MESSAGE_INFO_RPM_OUTPUT { \
+    "RPM_OUTPUT", \
+    3, \
+    {  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_rpm_output_t, time_usec) }, \
+         { "noutputs", NULL, MAVLINK_TYPE_UINT32_T, 0, 8, offsetof(mavlink_rpm_output_t, noutputs) }, \
+         { "output", NULL, MAVLINK_TYPE_FLOAT, 16, 12, offsetof(mavlink_rpm_output_t, output) }, \
+         } \
+}
+#endif
 
 /**
  * @brief Pack a rpm_output message
@@ -39,28 +53,24 @@ typedef struct __mavlink_rpm_output_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_rpm_output_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint64_t time_usec, uint32_t noutputs, const float *output)
+                               uint64_t time_usec, uint32_t noutputs, const float *output)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint32_t(buf, 8, noutputs);
-	_mav_put_float_array(buf, 12, output, 16);
+    char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint32_t(buf, 8, noutputs);
+    _mav_put_float_array(buf, 12, output, 16);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
 #else
-	mavlink_rpm_output_t packet;
-	packet.time_usec = time_usec;
-	packet.noutputs = noutputs;
-	mav_array_memcpy(packet.output, output, sizeof(float)*16);
+    mavlink_rpm_output_t packet;
+    packet.time_usec = time_usec;
+    packet.noutputs = noutputs;
+    mav_array_memcpy(packet.output, output, sizeof(float)*16);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_RPM_OUTPUT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_RPM_OUTPUT;
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 }
 
 /**
@@ -75,29 +85,25 @@ static inline uint16_t mavlink_msg_rpm_output_pack(uint8_t system_id, uint8_t co
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_rpm_output_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
-							   mavlink_message_t* msg,
-						           uint64_t time_usec,uint32_t noutputs,const float *output)
+                               mavlink_message_t* msg,
+                                   uint64_t time_usec,uint32_t noutputs,const float *output)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint32_t(buf, 8, noutputs);
-	_mav_put_float_array(buf, 12, output, 16);
+    char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint32_t(buf, 8, noutputs);
+    _mav_put_float_array(buf, 12, output, 16);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
 #else
-	mavlink_rpm_output_t packet;
-	packet.time_usec = time_usec;
-	packet.noutputs = noutputs;
-	mav_array_memcpy(packet.output, output, sizeof(float)*16);
+    mavlink_rpm_output_t packet;
+    packet.time_usec = time_usec;
+    packet.noutputs = noutputs;
+    mav_array_memcpy(packet.output, output, sizeof(float)*16);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_RPM_OUTPUT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_RPM_OUTPUT;
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 }
 
 /**
@@ -110,7 +116,7 @@ static inline uint16_t mavlink_msg_rpm_output_pack_chan(uint8_t system_id, uint8
  */
 static inline uint16_t mavlink_msg_rpm_output_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_rpm_output_t* rpm_output)
 {
-	return mavlink_msg_rpm_output_pack(system_id, component_id, msg, rpm_output->time_usec, rpm_output->noutputs, rpm_output->output);
+    return mavlink_msg_rpm_output_pack(system_id, component_id, msg, rpm_output->time_usec, rpm_output->noutputs, rpm_output->output);
 }
 
 /**
@@ -124,7 +130,7 @@ static inline uint16_t mavlink_msg_rpm_output_encode(uint8_t system_id, uint8_t 
  */
 static inline uint16_t mavlink_msg_rpm_output_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_rpm_output_t* rpm_output)
 {
-	return mavlink_msg_rpm_output_pack_chan(system_id, component_id, chan, msg, rpm_output->time_usec, rpm_output->noutputs, rpm_output->output);
+    return mavlink_msg_rpm_output_pack_chan(system_id, component_id, chan, msg, rpm_output->time_usec, rpm_output->noutputs, rpm_output->output);
 }
 
 /**
@@ -140,25 +146,31 @@ static inline uint16_t mavlink_msg_rpm_output_encode_chan(uint8_t system_id, uin
 static inline void mavlink_msg_rpm_output_send(mavlink_channel_t chan, uint64_t time_usec, uint32_t noutputs, const float *output)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint32_t(buf, 8, noutputs);
-	_mav_put_float_array(buf, 12, output, 16);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
+    char buf[MAVLINK_MSG_ID_RPM_OUTPUT_LEN];
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint32_t(buf, 8, noutputs);
+    _mav_put_float_array(buf, 12, output, 16);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
+    mavlink_rpm_output_t packet;
+    packet.time_usec = time_usec;
+    packet.noutputs = noutputs;
+    mav_array_memcpy(packet.output, output, sizeof(float)*16);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)&packet, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 #endif
+}
+
+/**
+ * @brief Send a rpm_output message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_rpm_output_send_struct(mavlink_channel_t chan, const mavlink_rpm_output_t* rpm_output)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_rpm_output_send(chan, rpm_output->time_usec, rpm_output->noutputs, rpm_output->output);
 #else
-	mavlink_rpm_output_t packet;
-	packet.time_usec = time_usec;
-	packet.noutputs = noutputs;
-	mav_array_memcpy(packet.output, output, sizeof(float)*16);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)&packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)&packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)rpm_output, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 #endif
 }
 
@@ -173,25 +185,17 @@ static inline void mavlink_msg_rpm_output_send(mavlink_channel_t chan, uint64_t 
 static inline void mavlink_msg_rpm_output_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t time_usec, uint32_t noutputs, const float *output)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char *buf = (char *)msgbuf;
-	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint32_t(buf, 8, noutputs);
-	_mav_put_float_array(buf, 12, output, 16);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
+    char *buf = (char *)msgbuf;
+    _mav_put_uint64_t(buf, 0, time_usec);
+    _mav_put_uint32_t(buf, 8, noutputs);
+    _mav_put_float_array(buf, 12, output, 16);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, buf, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
-#endif
-#else
-	mavlink_rpm_output_t *packet = (mavlink_rpm_output_t *)msgbuf;
-	packet->time_usec = time_usec;
-	packet->noutputs = noutputs;
-	mav_array_memcpy(packet->output, output, sizeof(float)*16);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)packet, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
-#endif
+    mavlink_rpm_output_t *packet = (mavlink_rpm_output_t *)msgbuf;
+    packet->time_usec = time_usec;
+    packet->noutputs = noutputs;
+    mav_array_memcpy(packet->output, output, sizeof(float)*16);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RPM_OUTPUT, (const char *)packet, MAVLINK_MSG_ID_RPM_OUTPUT_MIN_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_LEN, MAVLINK_MSG_ID_RPM_OUTPUT_CRC);
 #endif
 }
 #endif
@@ -208,7 +212,7 @@ static inline void mavlink_msg_rpm_output_send_buf(mavlink_message_t *msgbuf, ma
  */
 static inline uint64_t mavlink_msg_rpm_output_get_time_usec(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  0);
+    return _MAV_RETURN_uint64_t(msg,  0);
 }
 
 /**
@@ -218,7 +222,7 @@ static inline uint64_t mavlink_msg_rpm_output_get_time_usec(const mavlink_messag
  */
 static inline uint32_t mavlink_msg_rpm_output_get_noutputs(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint32_t(msg,  8);
+    return _MAV_RETURN_uint32_t(msg,  8);
 }
 
 /**
@@ -228,7 +232,7 @@ static inline uint32_t mavlink_msg_rpm_output_get_noutputs(const mavlink_message
  */
 static inline uint16_t mavlink_msg_rpm_output_get_output(const mavlink_message_t* msg, float *output)
 {
-	return _MAV_RETURN_float_array(msg, output, 16,  12);
+    return _MAV_RETURN_float_array(msg, output, 16,  12);
 }
 
 /**
@@ -239,11 +243,13 @@ static inline uint16_t mavlink_msg_rpm_output_get_output(const mavlink_message_t
  */
 static inline void mavlink_msg_rpm_output_decode(const mavlink_message_t* msg, mavlink_rpm_output_t* rpm_output)
 {
-#if MAVLINK_NEED_BYTE_SWAP
-	rpm_output->time_usec = mavlink_msg_rpm_output_get_time_usec(msg);
-	rpm_output->noutputs = mavlink_msg_rpm_output_get_noutputs(msg);
-	mavlink_msg_rpm_output_get_output(msg, rpm_output->output);
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    rpm_output->time_usec = mavlink_msg_rpm_output_get_time_usec(msg);
+    rpm_output->noutputs = mavlink_msg_rpm_output_get_noutputs(msg);
+    mavlink_msg_rpm_output_get_output(msg, rpm_output->output);
 #else
-	memcpy(rpm_output, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_RPM_OUTPUT_LEN? msg->len : MAVLINK_MSG_ID_RPM_OUTPUT_LEN;
+        memset(rpm_output, 0, MAVLINK_MSG_ID_RPM_OUTPUT_LEN);
+    memcpy(rpm_output, _MAV_PAYLOAD(msg), len);
 #endif
 }

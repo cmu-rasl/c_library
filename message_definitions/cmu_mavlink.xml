@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<mavlink>
+  <include>common.xml</include>
+  <!-- NOTE: If the included file already contains a version tag, remove the version tag here, else uncomment to enable. -->
+  <!--<version>3</version>-->
+  <enums>
+  </enums>
+  <messages>
+    <message id="207" name="IMAGE_TRIGGERED_IMU">
+      <description>This message encodes the IMU data with the timestamp and sequence ID of the GPIO trigger for a camera.</description>
+      <field type="uint64_t" name="timestamp">Timestamp of message in usec</field>
+
+      <field type="float" name="xacc"> </field>
+      <field type="float" name="yacc"> </field>
+      <field type="float" name="zacc"> </field>
+
+      <field type="float" name="xgyro"> </field>
+      <field type="float" name="ygyro"> </field>
+      <field type="float" name="zgyro"> </field>
+
+      <field type="float" name="xmag"> </field>
+      <field type="float" name="ymag"> </field>
+      <field type="float" name="zmag"> </field>
+
+      <field type="uint64_t" name="trigger_t"> Timestamp of trigger in usec</field>
+      <field type="uint64_t" name="trigger_seq"> Sequence number of trigger pin</field>
+      <field type="uint8_t"  name="trigger_id"> ID of triggered pin</field>
+    </message>
+    <message id="208" name="L1_ADAPTIVE_DEBUG">
+      <description>Debug message to stream diagnostic data from the L1 Adaptive Attitude Controller</description>
+      <field type="uint64_t" name="timestamp">Timestamp of the message in used</field>
+      <field type="uint16_t" name="seq_id">Sequence id of data</field>
+      <field type="float[3]" name="avl_hat">Angular Velocity Estimate </field>
+      <field type="float[3]" name="dst_hat">Disturbance Estimate</field>
+      <field type="float[3]" name="ang_vel">Angular Velocity obtained from R</field>
+      <field type="float[3]" name="lpd">Disturbance Rate Correction</field>
+      <field type="float[3]" name="rates">Body Rates obtained from Attitude Estimator</field>
+    </message>
+    <message id="209" name="ODOM_MOCAP">
+      <description>Motion capture attitude, position, and velocity</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="float[4]" name="q">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+      <field type="float" name="x">X position in meters (NED)</field>
+      <field type="float" name="y">Y position in meters (NED)</field>
+      <field type="float" name="z">Z position in meters (NED)</field>
+      <field type="float" name="vx">X velocity in m/s (NED)</field>
+      <field type="float" name="vy">Y velocity in m/s (NED)</field>
+      <field type="float" name="vz">Z velocity in m/s (NED)</field>
+    </message>
+    <message id="210" name="RPM_OUTPUT">
+      <description>RPM corresponding to the commanded PWM after compensating for voltage</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint32_t" name="noutputs">Number of valid outputs</field>
+      <field type="float[16]" name="output">RPM outputs</field>
+    </message>
+    <message id="211" name="CASCADED_CMD">
+      <description>Cascaded command inputs</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="float" name="thrust">Thrust (N)</field>
+      <field type="float[4]" name="q">Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)</field>
+      <field type="float[3]" name="ang_vel">Angular velocity about body axes (x, y, z)</field>
+      <field type="float[3]" name="ang_acc">Angular velocity about body axes (x, y, z)</field>
+    </message>
+    <message id="212" name="CASCADED_CMD_GAINS">
+      <description>Cascaded command gains</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="float[3]" name="kR">Rotational gains</field>
+      <field type="float[3]" name="kOm">Derivative gains</field>
+    </message>
+    <message id="213" name="MOCAP_MOTOR_STATE">
+      <description>Motor state control when operating in mocap</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="uint8_t" name="state">Motor status (1 = on, 0 = off)</field>
+    </message>
+    <message id="214" name="MOCAP_RPM_CMD">
+      <description>RPM command to corresponding motors (for mocap use/testing)</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="uint8_t" name="ninputs">Number of valid inputs</field>
+      <field type="uint16_t[8]" name="input">RPM cmd inputs</field>
+    </message>
+    <message id="215" name="MOCAP_TIMESYNC">
+      <description>Time synchronization message.</description>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="int64_t" name="tc1">Time sync timestamp 1</field>
+      <field type="int64_t" name="ts1">Time sync timestamp 2</field>
+    </message>
+    <message id="216" name="MOCAP_MULTI_POSE">
+      <description>Mocap pose of multiple robots</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="npose">Number of poses (max 5)</field>
+      <field type="uint8_t[5]" name="ids">Associated robot ids</field>
+      <field type="int16_t[20]" name="pose">Robot pose (x, y, z, heading) in m/10^3 or rad/10^4</field>
+    </message>
+    <message id="217" name="MOCAP_POSITION_CMD">
+      <description>Position (outer-loop) command for use in mocap</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="int16_t[3]" name="pos">Reference position (x, y, z) in mm</field>
+      <field type="int16_t[3]" name="vel">Reference velocity (x, y, z) in mm/s</field>
+      <field type="int16_t[3]" name="acc">Reference acceleration (x, y, z) in mm/s^2</field>
+      <field type="int16_t[3]" name="jerk">Reference jerk (x, y, z) in mm/s^3</field>
+      <field type="int16_t[3]" name="heading">Reference heading in mrad, mrad/s, mrad/s^2</field>
+    </message>
+    <message id="218" name="MOCAP_POSITION_CMD_GAINS">
+      <description>Mocap position command gains</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="float[3]" name="kp">Proportional gains</field>
+      <field type="float[3]" name="kd">Derivative gains</field>
+    </message>
+    <message id="219" name="BLINKM_CONTROL">
+      <description>Control variable for i2c LED</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="uint8_t" name="control">LED Control Variable</field>
+    </message>
+    <message id="220" name="CHARGER_INFO">
+      <description>External charging circuit information</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="int32_t" name="voltage">Voltage from UPS sensor</field>
+      <field type="int32_t" name="ups_current">Current from UPS sensor</field>
+      <field type="int32_t" name="hss_current">Current from HSS sensor</field>
+      <field type="uint8_t" name="gpio_status">status of GPIO on HSS</field>
+    </message>
+    <message id="221" name="CHARGER_GPIO">
+      <description>HSS gpio toggle message</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="uint8_t" name="target_system">Target system</field>
+      <field type="uint8_t" name="on">toggle GPIO on or off</field>
+    </message>
+    <message id="222" name="MOCAP_POSE">
+      <description>Mocap pose of single robot</description>
+      <field type="uint64_t" name="time_usec">Timestamp (micros since boot or Unix epoch)</field>
+      <field type="int16_t[4]" name="pose">Robot pose (x, y, z, heading) in m/10^3 or rad/10^4</field>
+    </message>
+  </messages>
+</mavlink>

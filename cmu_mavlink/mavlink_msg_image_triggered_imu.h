@@ -1,9 +1,10 @@
+#pragma once
 // MESSAGE IMAGE_TRIGGERED_IMU PACKING
 
 #define MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU 207
 
-typedef struct __mavlink_image_triggered_imu_t
-{
+MAVPACKED(
+typedef struct __mavlink_image_triggered_imu_t {
  uint64_t timestamp; /*< Timestamp of message in usec*/
  uint64_t trigger_t; /*<  Timestamp of trigger in usec*/
  uint64_t trigger_seq; /*<  Sequence number of trigger pin*/
@@ -17,20 +18,24 @@ typedef struct __mavlink_image_triggered_imu_t
  float ymag; /*<  */
  float zmag; /*<  */
  uint8_t trigger_id; /*<  ID of triggered pin*/
-} mavlink_image_triggered_imu_t;
+}) mavlink_image_triggered_imu_t;
 
 #define MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN 61
+#define MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN 61
 #define MAVLINK_MSG_ID_207_LEN 61
+#define MAVLINK_MSG_ID_207_MIN_LEN 61
 
 #define MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC 183
 #define MAVLINK_MSG_ID_207_CRC 183
 
 
 
+#if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_IMAGE_TRIGGERED_IMU { \
-	"IMAGE_TRIGGERED_IMU", \
-	13, \
-	{  { "timestamp", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_image_triggered_imu_t, timestamp) }, \
+    207, \
+    "IMAGE_TRIGGERED_IMU", \
+    13, \
+    {  { "timestamp", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_image_triggered_imu_t, timestamp) }, \
          { "trigger_t", NULL, MAVLINK_TYPE_UINT64_T, 0, 8, offsetof(mavlink_image_triggered_imu_t, trigger_t) }, \
          { "trigger_seq", NULL, MAVLINK_TYPE_UINT64_T, 0, 16, offsetof(mavlink_image_triggered_imu_t, trigger_seq) }, \
          { "xacc", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_image_triggered_imu_t, xacc) }, \
@@ -45,7 +50,26 @@ typedef struct __mavlink_image_triggered_imu_t
          { "trigger_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 60, offsetof(mavlink_image_triggered_imu_t, trigger_id) }, \
          } \
 }
-
+#else
+#define MAVLINK_MESSAGE_INFO_IMAGE_TRIGGERED_IMU { \
+    "IMAGE_TRIGGERED_IMU", \
+    13, \
+    {  { "timestamp", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_image_triggered_imu_t, timestamp) }, \
+         { "trigger_t", NULL, MAVLINK_TYPE_UINT64_T, 0, 8, offsetof(mavlink_image_triggered_imu_t, trigger_t) }, \
+         { "trigger_seq", NULL, MAVLINK_TYPE_UINT64_T, 0, 16, offsetof(mavlink_image_triggered_imu_t, trigger_seq) }, \
+         { "xacc", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_image_triggered_imu_t, xacc) }, \
+         { "yacc", NULL, MAVLINK_TYPE_FLOAT, 0, 28, offsetof(mavlink_image_triggered_imu_t, yacc) }, \
+         { "zacc", NULL, MAVLINK_TYPE_FLOAT, 0, 32, offsetof(mavlink_image_triggered_imu_t, zacc) }, \
+         { "xgyro", NULL, MAVLINK_TYPE_FLOAT, 0, 36, offsetof(mavlink_image_triggered_imu_t, xgyro) }, \
+         { "ygyro", NULL, MAVLINK_TYPE_FLOAT, 0, 40, offsetof(mavlink_image_triggered_imu_t, ygyro) }, \
+         { "zgyro", NULL, MAVLINK_TYPE_FLOAT, 0, 44, offsetof(mavlink_image_triggered_imu_t, zgyro) }, \
+         { "xmag", NULL, MAVLINK_TYPE_FLOAT, 0, 48, offsetof(mavlink_image_triggered_imu_t, xmag) }, \
+         { "ymag", NULL, MAVLINK_TYPE_FLOAT, 0, 52, offsetof(mavlink_image_triggered_imu_t, ymag) }, \
+         { "zmag", NULL, MAVLINK_TYPE_FLOAT, 0, 56, offsetof(mavlink_image_triggered_imu_t, zmag) }, \
+         { "trigger_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 60, offsetof(mavlink_image_triggered_imu_t, trigger_id) }, \
+         } \
+}
+#endif
 
 /**
  * @brief Pack a image_triggered_imu message
@@ -69,50 +93,46 @@ typedef struct __mavlink_image_triggered_imu_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_image_triggered_imu_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint64_t timestamp, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, uint64_t trigger_t, uint64_t trigger_seq, uint8_t trigger_id)
+                               uint64_t timestamp, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, uint64_t trigger_t, uint64_t trigger_seq, uint8_t trigger_id)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
-	_mav_put_uint64_t(buf, 0, timestamp);
-	_mav_put_uint64_t(buf, 8, trigger_t);
-	_mav_put_uint64_t(buf, 16, trigger_seq);
-	_mav_put_float(buf, 24, xacc);
-	_mav_put_float(buf, 28, yacc);
-	_mav_put_float(buf, 32, zacc);
-	_mav_put_float(buf, 36, xgyro);
-	_mav_put_float(buf, 40, ygyro);
-	_mav_put_float(buf, 44, zgyro);
-	_mav_put_float(buf, 48, xmag);
-	_mav_put_float(buf, 52, ymag);
-	_mav_put_float(buf, 56, zmag);
-	_mav_put_uint8_t(buf, 60, trigger_id);
+    char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
+    _mav_put_uint64_t(buf, 0, timestamp);
+    _mav_put_uint64_t(buf, 8, trigger_t);
+    _mav_put_uint64_t(buf, 16, trigger_seq);
+    _mav_put_float(buf, 24, xacc);
+    _mav_put_float(buf, 28, yacc);
+    _mav_put_float(buf, 32, zacc);
+    _mav_put_float(buf, 36, xgyro);
+    _mav_put_float(buf, 40, ygyro);
+    _mav_put_float(buf, 44, zgyro);
+    _mav_put_float(buf, 48, xmag);
+    _mav_put_float(buf, 52, ymag);
+    _mav_put_float(buf, 56, zmag);
+    _mav_put_uint8_t(buf, 60, trigger_id);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
 #else
-	mavlink_image_triggered_imu_t packet;
-	packet.timestamp = timestamp;
-	packet.trigger_t = trigger_t;
-	packet.trigger_seq = trigger_seq;
-	packet.xacc = xacc;
-	packet.yacc = yacc;
-	packet.zacc = zacc;
-	packet.xgyro = xgyro;
-	packet.ygyro = ygyro;
-	packet.zgyro = zgyro;
-	packet.xmag = xmag;
-	packet.ymag = ymag;
-	packet.zmag = zmag;
-	packet.trigger_id = trigger_id;
+    mavlink_image_triggered_imu_t packet;
+    packet.timestamp = timestamp;
+    packet.trigger_t = trigger_t;
+    packet.trigger_seq = trigger_seq;
+    packet.xacc = xacc;
+    packet.yacc = yacc;
+    packet.zacc = zacc;
+    packet.xgyro = xgyro;
+    packet.ygyro = ygyro;
+    packet.zgyro = zgyro;
+    packet.xmag = xmag;
+    packet.ymag = ymag;
+    packet.zmag = zmag;
+    packet.trigger_id = trigger_id;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU;
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 }
 
 /**
@@ -137,51 +157,47 @@ static inline uint16_t mavlink_msg_image_triggered_imu_pack(uint8_t system_id, u
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_image_triggered_imu_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
-							   mavlink_message_t* msg,
-						           uint64_t timestamp,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,uint64_t trigger_t,uint64_t trigger_seq,uint8_t trigger_id)
+                               mavlink_message_t* msg,
+                                   uint64_t timestamp,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,uint64_t trigger_t,uint64_t trigger_seq,uint8_t trigger_id)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
-	_mav_put_uint64_t(buf, 0, timestamp);
-	_mav_put_uint64_t(buf, 8, trigger_t);
-	_mav_put_uint64_t(buf, 16, trigger_seq);
-	_mav_put_float(buf, 24, xacc);
-	_mav_put_float(buf, 28, yacc);
-	_mav_put_float(buf, 32, zacc);
-	_mav_put_float(buf, 36, xgyro);
-	_mav_put_float(buf, 40, ygyro);
-	_mav_put_float(buf, 44, zgyro);
-	_mav_put_float(buf, 48, xmag);
-	_mav_put_float(buf, 52, ymag);
-	_mav_put_float(buf, 56, zmag);
-	_mav_put_uint8_t(buf, 60, trigger_id);
+    char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
+    _mav_put_uint64_t(buf, 0, timestamp);
+    _mav_put_uint64_t(buf, 8, trigger_t);
+    _mav_put_uint64_t(buf, 16, trigger_seq);
+    _mav_put_float(buf, 24, xacc);
+    _mav_put_float(buf, 28, yacc);
+    _mav_put_float(buf, 32, zacc);
+    _mav_put_float(buf, 36, xgyro);
+    _mav_put_float(buf, 40, ygyro);
+    _mav_put_float(buf, 44, zgyro);
+    _mav_put_float(buf, 48, xmag);
+    _mav_put_float(buf, 52, ymag);
+    _mav_put_float(buf, 56, zmag);
+    _mav_put_uint8_t(buf, 60, trigger_id);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
 #else
-	mavlink_image_triggered_imu_t packet;
-	packet.timestamp = timestamp;
-	packet.trigger_t = trigger_t;
-	packet.trigger_seq = trigger_seq;
-	packet.xacc = xacc;
-	packet.yacc = yacc;
-	packet.zacc = zacc;
-	packet.xgyro = xgyro;
-	packet.ygyro = ygyro;
-	packet.zgyro = zgyro;
-	packet.xmag = xmag;
-	packet.ymag = ymag;
-	packet.zmag = zmag;
-	packet.trigger_id = trigger_id;
+    mavlink_image_triggered_imu_t packet;
+    packet.timestamp = timestamp;
+    packet.trigger_t = trigger_t;
+    packet.trigger_seq = trigger_seq;
+    packet.xacc = xacc;
+    packet.yacc = yacc;
+    packet.zacc = zacc;
+    packet.xgyro = xgyro;
+    packet.ygyro = ygyro;
+    packet.zgyro = zgyro;
+    packet.xmag = xmag;
+    packet.ymag = ymag;
+    packet.zmag = zmag;
+    packet.trigger_id = trigger_id;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
 #endif
 
-	msg->msgid = MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
-#endif
+    msg->msgid = MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU;
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 }
 
 /**
@@ -194,7 +210,7 @@ static inline uint16_t mavlink_msg_image_triggered_imu_pack_chan(uint8_t system_
  */
 static inline uint16_t mavlink_msg_image_triggered_imu_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_image_triggered_imu_t* image_triggered_imu)
 {
-	return mavlink_msg_image_triggered_imu_pack(system_id, component_id, msg, image_triggered_imu->timestamp, image_triggered_imu->xacc, image_triggered_imu->yacc, image_triggered_imu->zacc, image_triggered_imu->xgyro, image_triggered_imu->ygyro, image_triggered_imu->zgyro, image_triggered_imu->xmag, image_triggered_imu->ymag, image_triggered_imu->zmag, image_triggered_imu->trigger_t, image_triggered_imu->trigger_seq, image_triggered_imu->trigger_id);
+    return mavlink_msg_image_triggered_imu_pack(system_id, component_id, msg, image_triggered_imu->timestamp, image_triggered_imu->xacc, image_triggered_imu->yacc, image_triggered_imu->zacc, image_triggered_imu->xgyro, image_triggered_imu->ygyro, image_triggered_imu->zgyro, image_triggered_imu->xmag, image_triggered_imu->ymag, image_triggered_imu->zmag, image_triggered_imu->trigger_t, image_triggered_imu->trigger_seq, image_triggered_imu->trigger_id);
 }
 
 /**
@@ -208,7 +224,7 @@ static inline uint16_t mavlink_msg_image_triggered_imu_encode(uint8_t system_id,
  */
 static inline uint16_t mavlink_msg_image_triggered_imu_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_image_triggered_imu_t* image_triggered_imu)
 {
-	return mavlink_msg_image_triggered_imu_pack_chan(system_id, component_id, chan, msg, image_triggered_imu->timestamp, image_triggered_imu->xacc, image_triggered_imu->yacc, image_triggered_imu->zacc, image_triggered_imu->xgyro, image_triggered_imu->ygyro, image_triggered_imu->zgyro, image_triggered_imu->xmag, image_triggered_imu->ymag, image_triggered_imu->zmag, image_triggered_imu->trigger_t, image_triggered_imu->trigger_seq, image_triggered_imu->trigger_id);
+    return mavlink_msg_image_triggered_imu_pack_chan(system_id, component_id, chan, msg, image_triggered_imu->timestamp, image_triggered_imu->xacc, image_triggered_imu->yacc, image_triggered_imu->zacc, image_triggered_imu->xgyro, image_triggered_imu->ygyro, image_triggered_imu->zgyro, image_triggered_imu->xmag, image_triggered_imu->ymag, image_triggered_imu->zmag, image_triggered_imu->trigger_t, image_triggered_imu->trigger_seq, image_triggered_imu->trigger_id);
 }
 
 /**
@@ -234,47 +250,53 @@ static inline uint16_t mavlink_msg_image_triggered_imu_encode_chan(uint8_t syste
 static inline void mavlink_msg_image_triggered_imu_send(mavlink_channel_t chan, uint64_t timestamp, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, uint64_t trigger_t, uint64_t trigger_seq, uint8_t trigger_id)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
-	_mav_put_uint64_t(buf, 0, timestamp);
-	_mav_put_uint64_t(buf, 8, trigger_t);
-	_mav_put_uint64_t(buf, 16, trigger_seq);
-	_mav_put_float(buf, 24, xacc);
-	_mav_put_float(buf, 28, yacc);
-	_mav_put_float(buf, 32, zacc);
-	_mav_put_float(buf, 36, xgyro);
-	_mav_put_float(buf, 40, ygyro);
-	_mav_put_float(buf, 44, zgyro);
-	_mav_put_float(buf, 48, xmag);
-	_mav_put_float(buf, 52, ymag);
-	_mav_put_float(buf, 56, zmag);
-	_mav_put_uint8_t(buf, 60, trigger_id);
+    char buf[MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN];
+    _mav_put_uint64_t(buf, 0, timestamp);
+    _mav_put_uint64_t(buf, 8, trigger_t);
+    _mav_put_uint64_t(buf, 16, trigger_seq);
+    _mav_put_float(buf, 24, xacc);
+    _mav_put_float(buf, 28, yacc);
+    _mav_put_float(buf, 32, zacc);
+    _mav_put_float(buf, 36, xgyro);
+    _mav_put_float(buf, 40, ygyro);
+    _mav_put_float(buf, 44, zgyro);
+    _mav_put_float(buf, 48, xmag);
+    _mav_put_float(buf, 52, ymag);
+    _mav_put_float(buf, 56, zmag);
+    _mav_put_uint8_t(buf, 60, trigger_id);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
-#endif
-#else
-	mavlink_image_triggered_imu_t packet;
-	packet.timestamp = timestamp;
-	packet.trigger_t = trigger_t;
-	packet.trigger_seq = trigger_seq;
-	packet.xacc = xacc;
-	packet.yacc = yacc;
-	packet.zacc = zacc;
-	packet.xgyro = xgyro;
-	packet.ygyro = ygyro;
-	packet.zgyro = zgyro;
-	packet.xmag = xmag;
-	packet.ymag = ymag;
-	packet.zmag = zmag;
-	packet.trigger_id = trigger_id;
+    mavlink_image_triggered_imu_t packet;
+    packet.timestamp = timestamp;
+    packet.trigger_t = trigger_t;
+    packet.trigger_seq = trigger_seq;
+    packet.xacc = xacc;
+    packet.yacc = yacc;
+    packet.zacc = zacc;
+    packet.xgyro = xgyro;
+    packet.ygyro = ygyro;
+    packet.zgyro = zgyro;
+    packet.xmag = xmag;
+    packet.ymag = ymag;
+    packet.zmag = zmag;
+    packet.trigger_id = trigger_id;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)&packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)&packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)&packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 #endif
+}
+
+/**
+ * @brief Send a image_triggered_imu message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_image_triggered_imu_send_struct(mavlink_channel_t chan, const mavlink_image_triggered_imu_t* image_triggered_imu)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_image_triggered_imu_send(chan, image_triggered_imu->timestamp, image_triggered_imu->xacc, image_triggered_imu->yacc, image_triggered_imu->zacc, image_triggered_imu->xgyro, image_triggered_imu->ygyro, image_triggered_imu->zgyro, image_triggered_imu->xmag, image_triggered_imu->ymag, image_triggered_imu->zmag, image_triggered_imu->trigger_t, image_triggered_imu->trigger_seq, image_triggered_imu->trigger_id);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)image_triggered_imu, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 #endif
 }
 
@@ -289,47 +311,39 @@ static inline void mavlink_msg_image_triggered_imu_send(mavlink_channel_t chan, 
 static inline void mavlink_msg_image_triggered_imu_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint64_t timestamp, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, uint64_t trigger_t, uint64_t trigger_seq, uint8_t trigger_id)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char *buf = (char *)msgbuf;
-	_mav_put_uint64_t(buf, 0, timestamp);
-	_mav_put_uint64_t(buf, 8, trigger_t);
-	_mav_put_uint64_t(buf, 16, trigger_seq);
-	_mav_put_float(buf, 24, xacc);
-	_mav_put_float(buf, 28, yacc);
-	_mav_put_float(buf, 32, zacc);
-	_mav_put_float(buf, 36, xgyro);
-	_mav_put_float(buf, 40, ygyro);
-	_mav_put_float(buf, 44, zgyro);
-	_mav_put_float(buf, 48, xmag);
-	_mav_put_float(buf, 52, ymag);
-	_mav_put_float(buf, 56, zmag);
-	_mav_put_uint8_t(buf, 60, trigger_id);
+    char *buf = (char *)msgbuf;
+    _mav_put_uint64_t(buf, 0, timestamp);
+    _mav_put_uint64_t(buf, 8, trigger_t);
+    _mav_put_uint64_t(buf, 16, trigger_seq);
+    _mav_put_float(buf, 24, xacc);
+    _mav_put_float(buf, 28, yacc);
+    _mav_put_float(buf, 32, zacc);
+    _mav_put_float(buf, 36, xgyro);
+    _mav_put_float(buf, 40, ygyro);
+    _mav_put_float(buf, 44, zgyro);
+    _mav_put_float(buf, 48, xmag);
+    _mav_put_float(buf, 52, ymag);
+    _mav_put_float(buf, 56, zmag);
+    _mav_put_uint8_t(buf, 60, trigger_id);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, buf, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
-#endif
-#else
-	mavlink_image_triggered_imu_t *packet = (mavlink_image_triggered_imu_t *)msgbuf;
-	packet->timestamp = timestamp;
-	packet->trigger_t = trigger_t;
-	packet->trigger_seq = trigger_seq;
-	packet->xacc = xacc;
-	packet->yacc = yacc;
-	packet->zacc = zacc;
-	packet->xgyro = xgyro;
-	packet->ygyro = ygyro;
-	packet->zgyro = zgyro;
-	packet->xmag = xmag;
-	packet->ymag = ymag;
-	packet->zmag = zmag;
-	packet->trigger_id = trigger_id;
+    mavlink_image_triggered_imu_t *packet = (mavlink_image_triggered_imu_t *)msgbuf;
+    packet->timestamp = timestamp;
+    packet->trigger_t = trigger_t;
+    packet->trigger_seq = trigger_seq;
+    packet->xacc = xacc;
+    packet->yacc = yacc;
+    packet->zacc = zacc;
+    packet->xgyro = xgyro;
+    packet->ygyro = ygyro;
+    packet->zgyro = zgyro;
+    packet->xmag = xmag;
+    packet->ymag = ymag;
+    packet->zmag = zmag;
+    packet->trigger_id = trigger_id;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU, (const char *)packet, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_MIN_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_CRC);
 #endif
 }
 #endif
@@ -346,7 +360,7 @@ static inline void mavlink_msg_image_triggered_imu_send_buf(mavlink_message_t *m
  */
 static inline uint64_t mavlink_msg_image_triggered_imu_get_timestamp(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  0);
+    return _MAV_RETURN_uint64_t(msg,  0);
 }
 
 /**
@@ -356,7 +370,7 @@ static inline uint64_t mavlink_msg_image_triggered_imu_get_timestamp(const mavli
  */
 static inline float mavlink_msg_image_triggered_imu_get_xacc(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  24);
+    return _MAV_RETURN_float(msg,  24);
 }
 
 /**
@@ -366,7 +380,7 @@ static inline float mavlink_msg_image_triggered_imu_get_xacc(const mavlink_messa
  */
 static inline float mavlink_msg_image_triggered_imu_get_yacc(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  28);
+    return _MAV_RETURN_float(msg,  28);
 }
 
 /**
@@ -376,7 +390,7 @@ static inline float mavlink_msg_image_triggered_imu_get_yacc(const mavlink_messa
  */
 static inline float mavlink_msg_image_triggered_imu_get_zacc(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  32);
+    return _MAV_RETURN_float(msg,  32);
 }
 
 /**
@@ -386,7 +400,7 @@ static inline float mavlink_msg_image_triggered_imu_get_zacc(const mavlink_messa
  */
 static inline float mavlink_msg_image_triggered_imu_get_xgyro(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  36);
+    return _MAV_RETURN_float(msg,  36);
 }
 
 /**
@@ -396,7 +410,7 @@ static inline float mavlink_msg_image_triggered_imu_get_xgyro(const mavlink_mess
  */
 static inline float mavlink_msg_image_triggered_imu_get_ygyro(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  40);
+    return _MAV_RETURN_float(msg,  40);
 }
 
 /**
@@ -406,7 +420,7 @@ static inline float mavlink_msg_image_triggered_imu_get_ygyro(const mavlink_mess
  */
 static inline float mavlink_msg_image_triggered_imu_get_zgyro(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  44);
+    return _MAV_RETURN_float(msg,  44);
 }
 
 /**
@@ -416,7 +430,7 @@ static inline float mavlink_msg_image_triggered_imu_get_zgyro(const mavlink_mess
  */
 static inline float mavlink_msg_image_triggered_imu_get_xmag(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  48);
+    return _MAV_RETURN_float(msg,  48);
 }
 
 /**
@@ -426,7 +440,7 @@ static inline float mavlink_msg_image_triggered_imu_get_xmag(const mavlink_messa
  */
 static inline float mavlink_msg_image_triggered_imu_get_ymag(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  52);
+    return _MAV_RETURN_float(msg,  52);
 }
 
 /**
@@ -436,7 +450,7 @@ static inline float mavlink_msg_image_triggered_imu_get_ymag(const mavlink_messa
  */
 static inline float mavlink_msg_image_triggered_imu_get_zmag(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_float(msg,  56);
+    return _MAV_RETURN_float(msg,  56);
 }
 
 /**
@@ -446,7 +460,7 @@ static inline float mavlink_msg_image_triggered_imu_get_zmag(const mavlink_messa
  */
 static inline uint64_t mavlink_msg_image_triggered_imu_get_trigger_t(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  8);
+    return _MAV_RETURN_uint64_t(msg,  8);
 }
 
 /**
@@ -456,7 +470,7 @@ static inline uint64_t mavlink_msg_image_triggered_imu_get_trigger_t(const mavli
  */
 static inline uint64_t mavlink_msg_image_triggered_imu_get_trigger_seq(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint64_t(msg,  16);
+    return _MAV_RETURN_uint64_t(msg,  16);
 }
 
 /**
@@ -466,7 +480,7 @@ static inline uint64_t mavlink_msg_image_triggered_imu_get_trigger_seq(const mav
  */
 static inline uint8_t mavlink_msg_image_triggered_imu_get_trigger_id(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  60);
+    return _MAV_RETURN_uint8_t(msg,  60);
 }
 
 /**
@@ -477,21 +491,23 @@ static inline uint8_t mavlink_msg_image_triggered_imu_get_trigger_id(const mavli
  */
 static inline void mavlink_msg_image_triggered_imu_decode(const mavlink_message_t* msg, mavlink_image_triggered_imu_t* image_triggered_imu)
 {
-#if MAVLINK_NEED_BYTE_SWAP
-	image_triggered_imu->timestamp = mavlink_msg_image_triggered_imu_get_timestamp(msg);
-	image_triggered_imu->trigger_t = mavlink_msg_image_triggered_imu_get_trigger_t(msg);
-	image_triggered_imu->trigger_seq = mavlink_msg_image_triggered_imu_get_trigger_seq(msg);
-	image_triggered_imu->xacc = mavlink_msg_image_triggered_imu_get_xacc(msg);
-	image_triggered_imu->yacc = mavlink_msg_image_triggered_imu_get_yacc(msg);
-	image_triggered_imu->zacc = mavlink_msg_image_triggered_imu_get_zacc(msg);
-	image_triggered_imu->xgyro = mavlink_msg_image_triggered_imu_get_xgyro(msg);
-	image_triggered_imu->ygyro = mavlink_msg_image_triggered_imu_get_ygyro(msg);
-	image_triggered_imu->zgyro = mavlink_msg_image_triggered_imu_get_zgyro(msg);
-	image_triggered_imu->xmag = mavlink_msg_image_triggered_imu_get_xmag(msg);
-	image_triggered_imu->ymag = mavlink_msg_image_triggered_imu_get_ymag(msg);
-	image_triggered_imu->zmag = mavlink_msg_image_triggered_imu_get_zmag(msg);
-	image_triggered_imu->trigger_id = mavlink_msg_image_triggered_imu_get_trigger_id(msg);
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    image_triggered_imu->timestamp = mavlink_msg_image_triggered_imu_get_timestamp(msg);
+    image_triggered_imu->trigger_t = mavlink_msg_image_triggered_imu_get_trigger_t(msg);
+    image_triggered_imu->trigger_seq = mavlink_msg_image_triggered_imu_get_trigger_seq(msg);
+    image_triggered_imu->xacc = mavlink_msg_image_triggered_imu_get_xacc(msg);
+    image_triggered_imu->yacc = mavlink_msg_image_triggered_imu_get_yacc(msg);
+    image_triggered_imu->zacc = mavlink_msg_image_triggered_imu_get_zacc(msg);
+    image_triggered_imu->xgyro = mavlink_msg_image_triggered_imu_get_xgyro(msg);
+    image_triggered_imu->ygyro = mavlink_msg_image_triggered_imu_get_ygyro(msg);
+    image_triggered_imu->zgyro = mavlink_msg_image_triggered_imu_get_zgyro(msg);
+    image_triggered_imu->xmag = mavlink_msg_image_triggered_imu_get_xmag(msg);
+    image_triggered_imu->ymag = mavlink_msg_image_triggered_imu_get_ymag(msg);
+    image_triggered_imu->zmag = mavlink_msg_image_triggered_imu_get_zmag(msg);
+    image_triggered_imu->trigger_id = mavlink_msg_image_triggered_imu_get_trigger_id(msg);
 #else
-	memcpy(image_triggered_imu, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN? msg->len : MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN;
+        memset(image_triggered_imu, 0, MAVLINK_MSG_ID_IMAGE_TRIGGERED_IMU_LEN);
+    memcpy(image_triggered_imu, _MAV_PAYLOAD(msg), len);
 #endif
 }
